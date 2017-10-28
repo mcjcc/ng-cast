@@ -3,33 +3,43 @@ angular.module('video-player')
 .component('app', {
   // pass in serach youtube service dependency somehow
   bindings: {
-    exampleVideoData: '<'
+    exampleVideoData: '<',
   },
 
-  controller: function() {
-    
-    this.videos = exampleVideoData;
-    this.currentVideo = this.videos[0];
-    console.log('exampleVideData app: ', this.videos);
-    console.log('current Video: ', this.currentVideo);
-
-    this.$onInit = () => {
-      // this.currentVideo = exampleVideoData.videos[0];
+  controller: function(youTube) {
       
+
+
+    this.searchValue = '';
+
+    this.$onInit = function() {
+      this.searchResults('');
     };
 
-    this.searchResults = () => {
-      // youtube.search
+
+    
+    this.searchResults = (string) => {
+      console.log('searchResults called!');
+      youTube.search(string, (data) => { 
+        this.videos = data;
+        this.currentVideo = this.videos[0];    
+      });
+    };
+
+    this.onClickSearch = (string) => {      
+      this.searchResults(this.searchValue);
     };
 
     this.selectVideo = (index) => {
       this.currentVideo = this.videos[index];
     };
 
-    this.onClick = (index) => {
-      console.log('Im clicked on!!!');
+    this.onClick = (index) => {      
       this.selectVideo(index);
     };
+
+    
+    
   },
 
   templateUrl: 'src/templates/app.html'
